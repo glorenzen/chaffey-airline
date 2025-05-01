@@ -9,11 +9,12 @@ coach_class = [[OPEN] * 4 for _ in range(10)]
 
 
 def display_options():
-    # TODO: Update the number of available seats depending on how many are left
+    available_first_class = sum(row.count(OPEN) for row in first_class)
+    available_coach_class = sum(row.count(OPEN) for row in coach_class)
     print("1) Make a new first class reservation")
-    print("   a. Only 8 seats are available at $500")
+    print(f"   a. Only {available_first_class} seats are available at $500")
     print("2) Make a new coach class reservation")
-    print("   a. Only 40 seats are available at $199")
+    print(f"   a. Only {available_coach_class} seats are available at $199")
     print("3) Change an existing reservation")
     print("4) Print the listing of seats")
     print("5) Quit")
