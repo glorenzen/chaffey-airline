@@ -67,43 +67,51 @@ def print_denominations(change):
             print(f"{name} x 0")
 
 
-def validate_seat(seat_class, row, seat_letter):
+def is_valid_row_selection(seat_class: list, row: int):
     if (
         row < 0
         or (row > 3 and seat_class == first_class)
         or (row > 9 and seat_class == coach_class)
     ):
-        print("Invalid row number. Please try again.")
-        return False, None
 
-    seat = ord(seat_letter.upper()) - ord("A")
+        return False
+    return True
+
+
+def is_valid_seat_selection(seat_class: list, seat_index: int):
+
     if seat_class == first_class:
-        if seat < 0 or seat > 1:
-            print("Invalid seat letter. Please try again.")
-            return False, None
+        if seat_index < 0 or seat_index > 1:
+            return False
     else:
-        if seat < 0 or seat > 3:
-            print("Invalid seat letter. Please try again.")
-            return False, None
+        if seat_index < 0 or seat_index > 3:
+            return False
 
-    return True, seat
+    return True
 
 
 def make_reservation(seat_class):
     print("Please enter the row number (0-3 for first class, 0-9 for coach class):")
+
     row = int(input("Row: "))
-    seat = input("Seat: ")
-    is_valid, seat = validate_seat(seat_class, row, seat)
-    if not is_valid:
+    if not is_valid_row_selection(seat_class, row):
+        print("Invalid row number. Please try again.")
         return
-    if seat_class[row][seat] == OPEN:
+
+    seat_letter = input("Seat: ")
+    seat_index = ord(seat_letter.upper()) - ord("A")
+    if not is_valid_seat_selection(seat_class, seat_index):
+        print("Invalid seat letter. Please try again.")
+        return
+
+    if seat_class[row][seat_index] == OPEN:
         name = input("Please enter your name: ")
-        seat_class[row][seat] = name
+        seat_class[row][seat_index] = name
         age = int(input("Please enter your age: "))
         cost = calculate_cost(seat_class, age)
         amount_given = int(input(f"Cost is ${cost:.2f}. Please enter amount given: "))
         change = amount_given - cost
-        print(f"Reservation made for {name} in seat {row} {chr(65 + seat)}.")
+        print(f"Reservation made for {name} in seat {row} {chr(65 + seat_index)}.")
         print(f"Change: ${change:.2f}")
         print_denominations(change)
     else:
@@ -112,17 +120,24 @@ def make_reservation(seat_class):
 
 def change_reservation(seat_class):
     print("Please enter the row number (0-3 for first class, 0-9 for coach class):")
+
     row = int(input("Row: "))
-    seat = input("Seat: ")
-    is_valid, seat = validate_seat(seat_class, row, seat)
-    if not is_valid:
+    if not is_valid_row_selection(seat_class, row):
+        print("Invalid row number. Please try again.")
         return
-    if seat_class[row][seat] != OPEN:
+
+    seat_letter = input("Seat: ")
+    seat_index = ord(seat_letter.upper()) - ord("A")
+    if not is_valid_seat_selection(seat_class, seat_index):
+        print("Invalid seat letter. Please try again.")
+        return
+
+    if seat_class[row][seat_index] != OPEN:
         print(
-            f"Seat {row} {chr(65 + seat)} is currently reserved by {seat_class[row][seat]}."
+            f"Seat {row} {chr(65 + seat_index)} is currently reserved by {seat_class[row][seat_index]}."
         )
-        seat_class[row][seat] = OPEN
-        print(f"Seat {row} {chr(65 + seat)} is now open.")
+        seat_class[row][seat_index] = OPEN
+        print(f"Seat {row} {chr(65 + seat_index)} is now open.")
         # TODO: Allow user to choose new seat class
         print("Please choose a new seat.")
         make_reservation(seat_class)
