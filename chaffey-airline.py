@@ -138,7 +138,14 @@ def change_reservation(seat_class):
         )
         seat_class[row][seat_index] = OPEN
         print(f"Seat {row} {chr(65 + seat_index)} is now open.")
-        # TODO: Allow user to choose new seat class
+        print("Please choose a new seat class: ")
+        print("1) First Class")
+        print("2) Coach Class")
+        class_choice = input("Please enter your choice (1-2): ")
+        if class_choice == "1":
+            seat_class = first_class
+        elif class_choice == "2":
+            seat_class = coach_class
         print("Please choose a new seat.")
         make_reservation(seat_class)
     else:
